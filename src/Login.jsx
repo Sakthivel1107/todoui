@@ -31,7 +31,7 @@ function Login(){
             }
         }
     return(
-        <div className="d-flex justify-content-center align-item-center vh-60">
+        <div className="d-flex justify-content-center align-item-center vh-60 formui">
             <form className="forml">
                 <h3 className="mb-5 heading">Login</h3>
                 <div className="mb-3">
