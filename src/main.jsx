@@ -25,7 +25,11 @@ const router = createBrowserRouter([
     path:'Todos',
     element:<Todo/>
   }
-]);
+],
+  {
+    basename: '/todoui',
+  }
+);
 createRoot(document.getElementById('root')).render(
   <RouterProvider router={router}/>
 )
