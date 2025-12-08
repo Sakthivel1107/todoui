@@ -59,7 +59,7 @@ function Register(){
         }
     }
     return(
-        <div className="credPage formui">
+        <div className="credPage">
             <form className="form" onSubmit={handleSubmit}>
                 <h3 className="mb-5 heading">Register</h3>
                 <div className="mb-3">
