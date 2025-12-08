@@ -460,6 +460,8 @@ html, body, #root{
     text-decoration: none;
     color: black;
 }
-.formui{
-    margin-top: 20%;
+@media  screen and (max-width: 900px) {
+    .formui{
+        margin-top: 20%;
+    }
 }
