@@ -38,7 +38,7 @@ function Login(){
                 <div className="mb-3">
                     <i className="icon bi bi-envelope-fill fs-4"></i><input value={email} onChange={emailInput} type="email" className="input" placeholder="Enter your name" required />
                 </div>
-                <div className="mb-3 regPassword">
+                <div className="mb-3 password">
                     <i className="iconPass bi bi-key-fill fs-4"></i>
                     <input value={password} onChange={passwordInput} className="inputPass pe-5" 
                     type={showPassword?"text":"password"} placeholder="Enter your password" required/>

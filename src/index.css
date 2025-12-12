@@ -81,19 +81,19 @@ html, body, #root{
     padding-bottom: 2%;
     
 }
-.regPassword{
+.password{
     position: relative;
     display: flex;
     align-items: center;
     width: 100%;
 }
-.regPassword .iconPass{
+.password .iconPass{
     background-color: blue;
     padding-inline: 3%;
     padding-top: 2px;
        
 }
-.regPassword .inputPass{
+.password .inputPass{
     padding-top: 3.5%;
     padding-bottom: 1.5%;
     width: 85%;
@@ -490,7 +490,4 @@ html, body, #root{
         width: 100%;
         background-color: rgb(173, 247, 247);
     }
-}
-.regPassword{
-    position: relative;
 }
