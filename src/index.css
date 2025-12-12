@@ -490,4 +490,8 @@ html, body, #root{
         width: 100%;
         background-color: rgb(173, 247, 247);
     }
+    .form{
+        padding-top: 20%;
+        padding-bottom: 20%;
+    }
 }
