@@ -33,7 +33,7 @@ function Login(){
         }
     return(
         <div className="d-flex justify-content-center align-item-center vh-60 formui">
-            <form className="form">
+            <form className="forml">
                 <h3 className="mb-5 heading">Login</h3>
                 <div className="mb-3">
                     <i className="icon bi bi-envelope-fill fs-4"></i><input value={email} onChange={emailInput} type="email" className="input" placeholder="Enter your name" required />

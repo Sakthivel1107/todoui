@@ -492,6 +492,10 @@ html, body, #root{
     }
     .form{
         padding-top: 20%;
-        padding-bottom: 20%;
+        padding-bottom: 30%;
+    }
+    .forml{
+        padding-top: 20%;
+        padding-bottom: 40%;
     }
 }
