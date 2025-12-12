@@ -22,7 +22,7 @@ function Login(){
                 "password":password
             }
             try{
-            const response = await axios.post("http://localhost:8080/auth/login",userDetails);
+            const response = await axios.post("https://todo-api-gw67.onrender.com/auth/login",userDetails);
             console.log(response.data);
             localStorage.setItem("user",JSON.stringify(response.data));
             handleNavigate();

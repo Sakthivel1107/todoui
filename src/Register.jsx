@@ -50,7 +50,7 @@ function Register(){
             "email":email,
             "password":password
         }
-        const response = await axios.post("http://localhost:8080/auth/register",userDetails);
+        const response = await axios.post("https://todo-api-gw67.onrender.com/auth/register",userDetails);
         alert("You have successfully registered. please login");
         handleNavigate();
         }

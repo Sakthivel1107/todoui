@@ -34,7 +34,7 @@ function Todo(){
     useEffect(()=>{
         async function fetchData() {
             try{
-                const response = await axios.get(`http://localhost:8080/api/v1/todo/${userId}`);
+                const response = await axios.get(`https://todo-api-gw67.onrender.com/api/v1/todo/${userId}`);
                 setTodos(response.data);
             }
             catch(err){
@@ -43,7 +43,7 @@ function Todo(){
         }
         async function fetchUserData(){
             try{
-                const response = await axios.get(`http://localhost:8080/auth/${userId}`);
+                const response = await axios.get(`https://todo-api-gw67.onrender.com/auth/${userId}`);
                 setUser(response.data);
                 setName(response.data.name);
                 setImageUrl(response.data.url);
@@ -69,7 +69,7 @@ function Todo(){
             "title":inputValue.current,
             "completed":false
         }
-        const response = await axios.post("http://localhost:8080/api/v1/todo",todoObject);
+        const response = await axios.post("https://todo-api-gw67.onrender.com/todo",todoObject);
         setTodos(prev => [...prev,response.data]);
     }
     function handleUpdate (unUpdatedTodo){
@@ -80,7 +80,7 @@ function Todo(){
             "completed":unUpdatedTodo.isCompleted===true?false:true
         }
         async function update() {
-           const response = await axios.put("http://localhost:8080/api/v1/todo",updatedTodo);
+           const response = await axios.put("https://todo-api-gw67.onrender.com/api/v1/todo",updatedTodo);
            setTodos(prev => prev.map(todo =>(todo.id === updatedTodo.id?response.data:todo)));
            setFilteredTodos(prev => prev.map(todo => (todo.id === updatedTodo.id?response.data:todo)));
            
@@ -89,7 +89,7 @@ function Todo(){
     }
     function handleDelete(id){
         async function deleteTodo() {
-            axios.delete(`http://localhost:8080/api/v1/todo/${id}`);
+            axios.delete(`https://todo-api-gw67.onrender.com/api/v1/todo/${id}`);
             setTodos(prev => prev.filter(todo => todo.id !== id));
             setFilteredTodos(prev => prev.filter(todo => todo.id !== id));
         }
@@ -169,7 +169,7 @@ function Todo(){
                 "password":user.password
             }
             setUser(updatedUser);
-            const response = await axios.put(`http://localhost:8080/auth`,updatedUser);
+            const response = await axios.put(`https://todo-api-gw67.onrender.com/auth`,updatedUser);
         }
         update();
         setUpdateInput(0);
@@ -214,7 +214,7 @@ function Todo(){
         formData.append("password",user.password);
         formData.append("url",user.url);
         async function update() {
-            const response = await axios.put(`http://localhost:8080/auth`,formData,{
+            const response = await axios.put(`https://todo-api-gw67.onrender.com/auth`,formData,{
                 headers:{
                     "Content-Type":"multipart/form-data",
                 },
