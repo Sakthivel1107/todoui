@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 function Login(){
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
+    const [showPassword,setShowPassword] = useState(false);
     function emailInput(e){
         setEmail(e.target.value);
     }
@@ -37,8 +38,16 @@ function Login(){
                 <div className="mb-3">
                     <i className="icon bi bi-envelope-fill fs-4"></i><input value={email} onChange={emailInput} type="email" className="input" placeholder="Enter your name" required />
                 </div>
-                <div className="mb-3">
-                    <i className="icon bi bi-key-fill fs-4"></i><input value={password} onChange={passwordInput} className="input" type="password" placeholder="Enter your password" required/>
+                <div className="mb-3 regPassword">
+                    <i className="iconPass bi bi-key-fill fs-4"></i>
+                    <input value={password} onChange={passwordInput} className="inputPass pe-5" 
+                    type={showPassword?"text":"password"} placeholder="Enter your password" required/>
+                <i className="bi-eye eyeIcon" style={{
+                    color:showPassword?"blue":"black",
+                    fontSize:"20px",
+                    transition:"0.2s ease-in-out",
+                    position: "absolute"
+                    }} onClick={() => setShowPassword(!showPassword)}></i>
                 </div>
                 <div className="d-flex justify-content-center">
                     <button className="btn btn-info rounded-pill my-3 px-5 py-1" onClick={handleLogin}>Login</button>

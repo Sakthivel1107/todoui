@@ -59,7 +59,7 @@ function Register(){
         }
     }
     return(
-        <div className="credPage">
+        <div className="credPage formui">
             <form className="form" onSubmit={handleSubmit}>
                 <h3 className="mb-5 heading">Register</h3>
                 <div className="mb-3">
@@ -68,17 +68,21 @@ function Register(){
                 <div className="mb-3">
                     <i className="icon bi bi-envelope-fill fs-4"></i><input value={email} onChange={emailInput} type="email" className="input" placeholder="Enter your name" required/>
                 </div>
-                <div className="mb-3">
-                    <i className="icon bi bi-key-fill fs-4"></i><input value={password} onChange={passwordInput} className="input pe-5" type={showPassword?"text":"password"} placeholder="Enter your password" required/>
-                <span><i className="bi-eye" style={{
+               
+               
+                <div className="mb-3 regPassword">
+                    <i className="iconPass bi bi-key-fill fs-4"></i>
+                    <input value={password} onChange={passwordInput} className="inputPass pe-5" 
+                    type={showPassword?"text":"password"} placeholder="Enter your password" required/>
+                <i className="bi-eye eyeIcon" style={{
                     color:showPassword?"blue":"black",
                     fontSize:"20px",
                     transition:"0.2s ease-in-out",
-                    position:"absolute",
-                    marginTop:"3px",
-                    right:"40px"
-                    }} onClick={() => setShowPassword(!showPassword)}></i></span>
+                    position: "absolute"
+                    }} onClick={() => setShowPassword(!showPassword)}></i>
                 </div>
+
+
                 {error && <p style={{color:"red"}}>{error}</p>}
                 <div className="d-flex justify-content-center">
                     <button className="btn btn-info rounded-pill my-3 px-5 py-1" >Submit</button>
