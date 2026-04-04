@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import Todotask from "./Todotask";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import loader from "./assets/loader.gif"
 function Todo(){
     const navigate = useNavigate();
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    const userId = storedUser.userid;
-    const token = storedUser.token;
+    const url ="https://todo-api-1-1i1b.onrender.com";
+    const token = localStorage.getItem("token");
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     const [todos,setTodos] = useState([]);
     const [Search,setSearch] = useState("d-none");
@@ -15,7 +15,7 @@ function Todo(){
     const [addicon,setAddIcon] = useState("rounded-circle fs-2 add-icon");
     const [addicontext,setAddIconText] = useState("+");
     const [searchIcon,setSearchIcon] = useState("iconnav bi bi-search fs-2 ");
-    const [todoDiv,setTodoDiv] = useState("d-flex flex-column align-items-center mt-2");
+    const [todoDiv,setTodoDiv] = useState("d-flex flex-column align-items-center mt-5");
     const [searchDiv,setSearchDiv] = useState("d-none");
     const [taskValue,setTaskValue] = useState("");
     const [filteredTodos,setFilteredTodos] = useState([]);
@@ -25,16 +25,27 @@ function Todo(){
     const j = useRef(0);
     const [profile,setProfile] = useState(0);
     const [updateTab,setUpdateTab] = useState(0);
-    const [user,setUser] = useState();
+    const [user,setUser] = useState({});
     const [name,setName] = useState();
     const [updateInput,setUpdateInput] = useState("");
-    const completed = useRef(0);
-    const totalCount = useRef(0);
-    const [imageUrl,setImageUrl] = useState("src/assets/defaultImage.png");
+    const completed = todos.filter(todo => todo.completed).length;
+    const totalCount = todos.length;
+    axios.interceptors.response.use(
+        res => res,
+        err => {
+            if (err.response?.status === 403) {
+            localStorage.removeItem("token");
+
+                navigate("/login");
+            }
+            return Promise.reject(err);
+        }
+    );
+
     useEffect(()=>{
         async function fetchData() {
             try{
-                const response = await axios.get(`https://todo-api-gw67.onrender.com/api/v1/todo/${userId}`);
+                const response = await axios.get(url+"/api/v1/todo");
                 setTodos(response.data);
             }
             catch(err){
@@ -43,10 +54,10 @@ function Todo(){
         }
         async function fetchUserData(){
             try{
-                const response = await axios.get(`https://todo-api-gw67.onrender.com/auth/${userId}`);
+                const response = await axios.get(url+"/auth/user");
                 setUser(response.data);
                 setName(response.data.name);
-                setImageUrl(response.data.url);
+                
             }
             catch(err){
                 console.log(err);
@@ -65,22 +76,26 @@ function Todo(){
     async function insertTodo(){
         setTaskValue("");
         const todoObject = {
-            "userId":userId,
             "title":inputValue.current,
             "completed":false
         }
-        const response = await axios.post("https://todo-api-gw67.onrender.com/todo",todoObject);
+        const response = await axios.post(url+"/api/v1/todo",todoObject);
         setTodos(prev => [...prev,response.data]);
+        setScreen("d-none");
+        setAddTab("d-none");
+        setAddIconText("+");
+        setAddIcon("rounded-circle fs-2 add-icon");
+        document.body.style.overflow = "auto";
+        j.current = !j.current;
     }
     function handleUpdate (unUpdatedTodo){
         const updatedTodo = {
             "id":unUpdatedTodo.id,
-            "userId":userId,
             "title":unUpdatedTodo.task,
             "completed":unUpdatedTodo.isCompleted===true?false:true
         }
         async function update() {
-           const response = await axios.put("https://todo-api-gw67.onrender.com/api/v1/todo",updatedTodo);
+           const response = await axios.put(url+"/api/v1/todo",updatedTodo);
            setTodos(prev => prev.map(todo =>(todo.id === updatedTodo.id?response.data:todo)));
            setFilteredTodos(prev => prev.map(todo => (todo.id === updatedTodo.id?response.data:todo)));
            
@@ -89,7 +104,7 @@ function Todo(){
     }
     function handleDelete(id){
         async function deleteTodo() {
-            axios.delete(`https://todo-api-gw67.onrender.com/api/v1/todo/${id}`);
+            const response = await axios.delete(`${url}/api/v1/todo/${id}`);
             setTodos(prev => prev.filter(todo => todo.id !== id));
             setFilteredTodos(prev => prev.filter(todo => todo.id !== id));
         }
@@ -101,14 +116,14 @@ function Todo(){
         setSearch("d-block p-3 search-bar rounded-pill");
         setSearchIcon("bi bi-x fs-2 text-danger");
         setTodoDiv("d-none");
-        setSearchDiv("d-flex flex-column align-items-center mt-2");
+        setSearchDiv("d-flex flex-column align-items-center mt-5");
         setKeyword(""); 
         }
         else{
             setSearch("d-none");
             setSearchIcon("iconnav bi bi-search fs-2");
             setSearchDiv("d-none");
-            setTodoDiv("d-flex flex-column align-items-center mt-2");
+            setTodoDiv("d-flex flex-column align-items-center mt-5");
             setFilteredTodos([]);
         }
     }
@@ -163,72 +178,39 @@ function Todo(){
         setUpdateTab(!updateTab);
         async function update() {
             let updatedUser = {
-                "id":userId,
-                "email":user.email,
-                "name":nameValue,
-                "password":user.password
+                "name":nameValue
             }
-            setUser(updatedUser);
-            const response = await axios.put(`https://todo-api-gw67.onrender.com/auth`,updatedUser);
+            setUser(prev => ({...prev,[name]:nameValue}));
+            const response = await axios.put(url+"/auth",updatedUser);
         }
         update();
-        setUpdateInput(0);
     }
     function profileDiv(){
         i.current = 1;
         search();
         setProfile(!profile)
     }
-    function completedCount(){
-        let c=0,t;
-        
-        t = todos.length;
-        for(let i = 0;i<t;i++){
-                if(todos[i].completed===true){
-                    c++;
-                }
-        }
-        if(t===0){
-            completed.current = 0;
-        }
-        else{
-            completed.current = c;
-        }
-        totalCount.current = t;
-    }
     
     const handleImageUpdate = () => {
         document.getElementById("fileInput").click();
     }
+
     const handleFileChange = async (e)=> {
         const file = e.target.files[0];
+        setUser(prev => ({...prev,url:loader}));
         if(!file)
             return;
-        const extension = file.name.split('.').pop();
-        const customImageName = `img${userId}.${extension}`;
+    
         const formData = new FormData();
-        formData.append("image",file,customImageName);
-        formData.append("name",user.name);
-        formData.append("id",userId);
-        formData.append("email",user.email);
-        formData.append("password",user.password);
-        formData.append("url",user.url);
+        formData.append("file",file);
         async function update() {
-            const response = await axios.put(`https://todo-api-gw67.onrender.com/auth`,formData,{
+            const response = await axios.put(url+"/api/updateUser",formData,{
                 headers:{
                     "Content-Type":"multipart/form-data",
+                    "Authorization": `Bearer ${token}`
                 },
             });
-            const imgUrlFromServer = await response.data.url;
-            setImageUrl(imgUrlFromServer);
-            let updatedUser = {
-                "id":userId,
-                "email":user.email,
-                "name":user.name,
-                "password":user.password,
-                "url":imgUrlFromServer
-            }
-            setUser(updatedUser);
+            setUser(prev => ({...prev,url:response.data}));
         }
         update();
     }
@@ -244,19 +226,29 @@ function Todo(){
                     <i onClick={()=>profileDiv()} className="iconnav bi bi-person fs-2 "></i>
                 </div>
             </nav>
-            <h1 className="display-6 fw-bold pt-3">Welcome {name}</h1>
+            <h1 className="display-6 fw-bold pt-3 ms-3">Welcome {name}</h1>
                 <div className={addtab}>
-                <input type="text" onChange={(e)=>todoInput(e)} placeholder="Enter your task(maximum 15 characters)" value={taskValue}
+                <input type="text" onChange={(e)=>todoInput(e)} placeholder="Enter your task" value={taskValue}
                 className="p-3 taskInput rounded-pill"/>
                 <button className="button px-5 py-3 rounded-pill" onClick={() => insertTodo()}>Add</button>
             </div>
-            {todos.length===0 ?<h3>No todos yet</h3>:
+            {todos.length===0 ?
+            <div className="text-center mt-5">
+                <img 
+                    src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" 
+                    alt="empty"
+                    style={{ width: "120px", opacity: 0.7 }}
+                />
+
+                <h5 className="mt-3">You're all set to begin 🚀</h5>
+                <p className="text-muted">Add tasks and boost your productivity</p>
+
+                <button className="btn btn-info px-4" onClick={()=>add()}>Create Todo</button>
+            </div>
+            :
             <div className={todoDiv}>
                 {
-                    todos.length===0?completedCount():todos.map(function (element) {
-                    completedCount();
-                    return (<Todotask key={element.id} id={element.id} task={element.title} isCompleted={element.completed} handleUpdate={handleUpdate} handleDelete={handleDelete}/>);
-                })
+                    todos.map(element => <Todotask key={element.id} id={element.id} task={element.title} isCompleted={element.completed} handleUpdate={handleUpdate} handleDelete={handleDelete}/>)
                 }
             </div>}
             <div className={searchDiv}>{
@@ -283,7 +275,7 @@ function Todo(){
         }>
             <i onClick={()=>{setProfile(!profile);setUpdateTab(0);}} className="bi bi-arrow-right arrow-icon"></i>
             {/* { <i className="bi bi-person-fill profile-main-icon"></i> } */}
-            <img onClick={handleImageUpdate} src={imageUrl} alt="not found" className="img"/>
+            <img onClick={handleImageUpdate} src={user.url} alt="not found" className="img"/>
             <input type="file" id="fileInput" accept="image/*" style={{display:"none"}} onChange={handleFileChange} />
             <h2 style={{color: "white",marginTop:"40px",fontWeight: "bold",display: updateTab?"none":"block"}}>{name} <i onClick={()=>setUpdateTab(!updateTab)} className="bi bi-pen fs-5 text-primary"></i></h2>
             <div style={{display:updateTab?"flex":"none",
@@ -292,8 +284,8 @@ function Todo(){
                 <input type="text" value={updateInput} onChange={(e) => setUpdateInputValue(e)} style={{border:"none",outline:"none"}}/>
                 <i onClick={()=>updateName()} className="bi bi-check fs-3 bg-light checkin"></i>
             </div>
-            <h4 className="completed mt-2">Completed tasks: <span className="completed-count">{completed.current}</span></h4>
-            <h4 className="unCompleted">Uncompleted tasks: <span className="unCompleted-count">{totalCount.current-completed.current}</span></h4>
+            <h4 className="completed mt-2">Completed tasks: <span className="completed-count">{completed}</span></h4>
+            <h4 className="unCompleted">Uncompleted tasks: <span className="unCompleted-count">{totalCount-completed}</span></h4>
             <button className="btn btn-primary rounded-pill py-2 px-5 mt-4" onClick={()=>gotoHome()}>logout</button>
         </div>
         </div>

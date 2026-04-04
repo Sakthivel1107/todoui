@@ -7,6 +7,7 @@ function Register(){
     const [name,setName] = useState("");
     const [error,setError] = useState("");
     const [showPassword,setShowPassword] = useState(false);
+    const [value,setValue] = useState("Register");
     function emailInput(e){
         setEmail(e.target.value);
     }
@@ -39,6 +40,7 @@ function Register(){
         navigate("/login");
     }
     async function handleSubmit(e) {
+        setValue(<div className="spinner-border spinner-border-sm"></div>);
         e.preventDefault();
         if(error){
             alert(error + " for password");
@@ -50,11 +52,12 @@ function Register(){
             "email":email,
             "password":password
         }
-        const response = await axios.post("https://todo-api-gw67.onrender.com/auth/register",userDetails);
+        const response = await axios.post("https://todo-api-1-1i1b.onrender.com/auth/register",userDetails);
         alert("You have successfully registered. please login");
         handleNavigate();
         }
         catch{
+            setValue("Register");
             alert("Email already exists,please login");
         }
     }
@@ -62,30 +65,55 @@ function Register(){
         <div className="credPage formui">
             <form className="form" onSubmit={handleSubmit}>
                 <h3 className="mb-5 heading">Register</h3>
-                <div className="mb-3">
-                    <i className="icon bi bi-person-fill fs-4"></i><input value={name} onChange={nameInput} className="input" type="text" placeholder="Enter your name" required/>
+                <div className="bg-primary mb-3 d-flex align-items-center input-wrapper">
+                    <i className="icon bi bi-person-fill fs-5 mx-2"></i>
+                    <input 
+                        value={name} 
+                        onChange={nameInput} 
+                        className="form-control" 
+                        type="text" 
+                        placeholder="Enter your name" 
+                        required
+                    />
                 </div>
-                <div className="mb-3">
-                    <i className="icon bi bi-envelope-fill fs-4"></i><input value={email} onChange={emailInput} type="email" className="input" placeholder="Enter your name" required/>
+                <div className="bg-primary mb-3 d-flex align-items-center input-wrapper">
+                    <i className="bi bi-envelope-fill fs-5 mx-2"></i>
+                    <input 
+                        value={email}
+                        onChange={emailInput}
+                        type="email"
+                        className="form-control"
+                        placeholder="Enter your email"
+                        required
+                    />
                 </div>
-               
-               
-                <div className="mb-3 password">
-                    <i className="iconPass bi bi-key-fill fs-4"></i>
-                    <input value={password} onChange={passwordInput} className="inputPass pe-5" 
-                    type={showPassword?"text":"password"} placeholder="Enter your password" required/>
-                <i className="bi-eye eyeIcon" style={{
-                    color:showPassword?"blue":"black",
-                    fontSize:"20px",
-                    transition:"0.2s ease-in-out",
-                    position: "absolute"
-                    }} onClick={() => setShowPassword(!showPassword)}></i>
+               <div className="bg-primary mb-3 position-relative d-flex align-items-center input-wrapper">
+                    <i className="bi bi-key-fill fs-5 mx-2"></i>
+
+                    <input 
+                        value={password}
+                        onChange={passwordInput}
+                        className="form-control pe-5"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        required
+                    />
+
+                    <i 
+                        className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                            position: "absolute",
+                            right: "10px",
+                            cursor: "pointer"
+                        }}
+                    ></i>
                 </div>
 
 
                 {error && <p style={{color:"red"}}>{error}</p>}
                 <div className="d-flex justify-content-center">
-                    <button className="btn btn-info rounded-pill my-3 px-5 py-1" >Submit</button>
+                    <button className="btn btn-info rounded-pill my-3 px-5 py-1" type="submit">{value}</button>
                 </div>
                 <p>If you already have an account?<Link to='/Login'>Login</Link></p>
             </form>

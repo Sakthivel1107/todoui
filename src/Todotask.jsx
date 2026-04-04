@@ -10,10 +10,10 @@ function Todotask(props){
         else
             fs = 7;
     if(props.isCompleted===true){
-        todoTask.current = `task-completed fsize-${fs}`;
+        todoTask.current = `task-completed fsize-${fs} todo-task-text`;
     }
     else{
-        todoTask.current = `task-uncompleted fsize-${fs}`;
+        todoTask.current = `task-uncompleted fsize-${fs} todo-task-text`;
     }
     function updateChange(e){
         props.handleUpdate(props);

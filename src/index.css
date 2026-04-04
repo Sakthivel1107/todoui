@@ -11,7 +11,6 @@ html, body, #root{
     z-index: 1;
 }
 .home{
-    margin-top: 5%;
     position: relative;
     z-index: 1;
 }
@@ -74,43 +73,6 @@ html, body, #root{
         width: 75%;
     }   
 } */
-.icon{
-    background-color: blue;
-    padding-inline: 3%;
-    padding-top: 2%;
-    padding-bottom: 2%;
-    
-}
-.password{
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-.password .iconPass{
-    background-color: blue;
-    padding-inline: 3%;
-    padding-top: 2px;
-       
-}
-.password .inputPass{
-    padding-top: 3.5%;
-    padding-bottom: 1.5%;
-    width: 85%;
-    margin: 0%;
-    border: none;
-}
-.eyeIcon{
-    position: absolute;
-    right: 12px;
-}
-.input{
-    padding-top: 3.5%;
-    padding-bottom: 1.5%;
-    width: 85%;
-    margin: 0%;
-    border: none;
-}
 
 .nav-bar{
     background-color: black;
@@ -264,6 +226,11 @@ html, body, #root{
     border: 2px black solid;
     width: 500px;
     transition: all 0.3s ease;
+}
+.todo-task-text{
+    flex: 1;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 @media screen and (max-width: 600px){
     .taskInput{
@@ -498,4 +465,20 @@ html, body, #root{
         padding-top: 20%;
         padding-bottom: 60%;
     }
+}
+/* Hides the default eye icon in Microsoft Edge */
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
+
+/* Hides the default eye icon in Chrome/Safari (if applicable) */
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    position: absolute;
+    right: 0;
+}
+.form-control {
+  border-radius: 0;
 }
