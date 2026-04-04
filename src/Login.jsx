@@ -26,7 +26,6 @@ function Login(){
             }
             try{
             const response = await axios.post("https://todo-api-1-1i1b.onrender.com/auth/login",userDetails);
-            console.log(response.data.token);
             localStorage.setItem("token",response.data.token);
             handleNavigate();
             }

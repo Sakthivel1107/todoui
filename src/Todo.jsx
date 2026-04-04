@@ -3,6 +3,7 @@ import Todotask from "./Todotask";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import loader from "./assets/loader.gif"
+import { toast, ToastContainer } from "react-toastify";
 function Todo(){
     const navigate = useNavigate();
     const url ="https://todo-api-1-1i1b.onrender.com";
@@ -79,14 +80,20 @@ function Todo(){
             "title":inputValue.current,
             "completed":false
         }
-        const response = await axios.post(url+"/api/v1/todo",todoObject);
-        setTodos(prev => [...prev,response.data]);
-        setScreen("d-none");
-        setAddTab("d-none");
-        setAddIconText("+");
-        setAddIcon("rounded-circle fs-2 add-icon");
-        document.body.style.overflow = "auto";
-        j.current = !j.current;
+        try{
+            const response = await axios.post(url+"/api/v1/todo",todoObject);
+            setTodos(prev => [...prev,response.data]);
+            setScreen("d-none");
+            setAddTab("d-none");
+            setAddIconText("+");
+            setAddIcon("rounded-circle fs-2 add-icon");
+            document.body.style.overflow = "auto";
+            j.current = !j.current;
+            toast.success("Todo added successfully");
+        }
+        catch(error){
+            console.log(error);
+        }
     }
     function handleUpdate (unUpdatedTodo){
         const updatedTodo = {
@@ -104,6 +111,14 @@ function Todo(){
     }
     function handleDelete(id){
         async function deleteTodo() {
+            try {
+                const response = await axios.delete(`${url}/api/v1/todo/${id}`);
+                setTodos(prev => prev.filter(todo => todo.id !== id));
+                setFilteredTodos(prev => prev.filter(todo => todo.id !== id));
+                toast.success("Todo Deleted Successfully");
+            } catch (error) {
+                console.log(error);
+            }
             const response = await axios.delete(`${url}/api/v1/todo/${id}`);
             setTodos(prev => prev.filter(todo => todo.id !== id));
             setFilteredTodos(prev => prev.filter(todo => todo.id !== id));
@@ -217,6 +232,7 @@ function Todo(){
     
     return(
         <div className="main-div">
+            <ToastContainer />
             <div className="sub-div">
             <nav className="d-flex nav-bar">
                 <h1 className="pt-1 todo my-3">To-Do</h1>

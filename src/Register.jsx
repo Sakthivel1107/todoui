@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react";
+import { toast } from "react-toastify";
 function Register(){
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
@@ -43,7 +44,7 @@ function Register(){
         setValue(<div className="spinner-border spinner-border-sm"></div>);
         e.preventDefault();
         if(error){
-            alert(error + " for password");
+            toast.error(error + " for password");
             return;
         }
         try{
@@ -53,16 +54,17 @@ function Register(){
             "password":password
         }
         const response = await axios.post("https://todo-api-1-1i1b.onrender.com/auth/register",userDetails);
-        alert("You have successfully registered. please login");
+        toast.success("You have successfully registered. please login");
         handleNavigate();
         }
         catch{
             setValue("Register");
-            alert("Email already exists,please login");
+            toast.error("Email already exists,please login");
         }
     }
     return(
         <div className="credPage formui">
+            <ToastContainer />
             <form className="form" onSubmit={handleSubmit}>
                 <h3 className="mb-5 heading">Register</h3>
                 <div className="bg-primary mb-3 d-flex align-items-center input-wrapper">
