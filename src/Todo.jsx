@@ -4,7 +4,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import loader from "./assets/loader.gif"
 import { toast, ToastContainer } from "react-toastify";
-import Loader from "./loader/Loader";
 function Todo(){
     const navigate = useNavigate();
     const url ="https://todo-api-1-1i1b.onrender.com";
@@ -37,7 +36,7 @@ function Todo(){
         err => {
             if (err.response?.status === 403) {
             localStorage.removeItem("token");
-
+                toast.error("Your session is expired. Please login again.")
                 navigate("/login");
             }
             return Promise.reject(err);
@@ -232,88 +231,82 @@ function Todo(){
     }
     
     return(
-        <>
-        {
-            Object.keys(user).length === 0 ? <Loader /> 
+        <div className="main-div">
+            <ToastContainer />
+            <div className="sub-div">
+            <nav className="d-flex nav-bar">
+                <h1 className="pt-1 todo my-3">To-Do</h1>
+                <input type="text" placeholder="Search task..." className={Search}  value={keyword} onChange={(e)=>handleSearch(e)}/>
+                <div className="nav-icons mt-4 me-3">
+                    <i onClick={()=>search()} className={searchIcon}></i>
+                    <i onClick={()=>profileDiv()} className="iconnav bi bi-person fs-2 "></i>
+                </div>
+            </nav>
+            <h1 className="display-6 fw-bold pt-3 ms-3">Welcome {name}</h1>
+                <div className={addtab}>
+                <input type="text" onChange={(e)=>todoInput(e)} placeholder="Enter your task" value={taskValue}
+                className="p-3 taskInput rounded-pill"/>
+                <button className="button px-5 py-3 rounded-pill" onClick={() => insertTodo()}>Add</button>
+            </div>
+            {todos.length===0 ?
+            <div className="text-center mt-5">
+                <img 
+                    src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" 
+                    alt="empty"
+                    style={{ width: "120px", opacity: 0.7 }}
+                />
+
+                <h5 className="mt-3">You're all set to begin 🚀</h5>
+                <p className="text-muted">Add tasks and boost your productivity</p>
+
+                <button className="btn btn-info px-4" onClick={()=>add()}>Create Todo</button>
+            </div>
             :
-            <div className="main-div">
-                <ToastContainer />
-                <div className="sub-div">
-                <nav className="d-flex nav-bar">
-                    <h1 className="pt-1 todo my-3">To-Do</h1>
-                    <input type="text" placeholder="Search task..." className={Search}  value={keyword} onChange={(e)=>handleSearch(e)}/>
-                    <div className="nav-icons mt-4 me-3">
-                        <i onClick={()=>search()} className={searchIcon}></i>
-                        <i onClick={()=>profileDiv()} className="iconnav bi bi-person fs-2 "></i>
-                    </div>
-                </nav>
-                <h1 className="display-6 fw-bold pt-3 ms-3">Welcome {name}</h1>
-                    <div className={addtab}>
-                    <input type="text" onChange={(e)=>todoInput(e)} placeholder="Enter your task" value={taskValue}
-                    className="p-3 taskInput rounded-pill"/>
-                    <button className="button px-5 py-3 rounded-pill" onClick={() => insertTodo()}>Add</button>
-                </div>
-                {todos.length===0 ?
-                <div className="text-center mt-5">
-                    <img 
-                        src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" 
-                        alt="empty"
-                        style={{ width: "120px", opacity: 0.7 }}
-                    />
-
-                    <h5 className="mt-3">You're all set to begin 🚀</h5>
-                    <p className="text-muted">Add tasks and boost your productivity</p>
-
-                    <button className="btn btn-info px-4" onClick={()=>add()}>Create Todo</button>
-                </div>
-                :
-                <div className={todoDiv}>
-                    {
-                        todos.map(element => <Todotask key={element.id} id={element.id} task={element.title} isCompleted={element.completed} handleUpdate={handleUpdate} handleDelete={handleDelete}/>)
-                    }
-                </div>}
-                <div className={searchDiv}>{
-                    filteredTodos.map(element => <Todotask key={element.id} id={element.id} task={element.title} isCompleted={element.completed} handleUpdate={handleUpdate} handleDelete={handleDelete}/>)
-                }</div>
-                <button className={addicon} onClick={()=>add()}>{addicontext}</button>
-            </div>
-            <div className={screen}></div>
-            <div style={{
-                    display: "flex",
-                    opacity: profile?"1":"0",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    position: "absolute",
-                    height: "100%",
-                    width: "270px",
-                    top: "0%",
-                    right: "0%",
-                    zIndex: profile?"6":"0",
-                    overflow: "hidden",
-                    backgroundColor: "black",
-                    transition: "all 0.2s ease",
-                    }
-            }>
-                <i onClick={()=>{setProfile(!profile);setUpdateTab(0);}} className="bi bi-arrow-right arrow-icon"></i>
-                {/* { <i className="bi bi-person-fill profile-main-icon"></i> } */}
-                <img onClick={handleImageUpdate} src={user.url} alt="not found" className="img"/>
-                <input type="file" id="fileInput" accept="image/*" style={{display:"none"}} onChange={handleFileChange} />
-                <h2 style={{color: "white",marginTop:"40px",fontWeight: "bold",display: updateTab?"none":"block"}}>{name} <i onClick={()=>setUpdateTab(!updateTab)} className="bi bi-pen fs-5 text-primary"></i></h2>
-                <div style={{display:updateTab?"flex":"none",
-                    marginTop:"40px"
-                }}>
-                    <input type="text" value={updateInput} onChange={(e) => setUpdateInputValue(e)} style={{border:"none",outline:"none"}}/>
-                    <i onClick={()=>updateName()} className="bi bi-check fs-3 bg-light checkin"></i>
-                </div>
-                <h4 className="completed mt-2">Completed tasks: <span className="completed-count">{completed}</span></h4>
-                <h4 className="unCompleted">Uncompleted tasks: <span className="unCompleted-count">{totalCount-completed}</span></h4>
-                <button className="btn btn-primary rounded-pill py-2 px-5 mt-4" onClick={()=>gotoHome()}>logout</button>
-            </div>
+            <div className={todoDiv}>
+                {
+                    todos.map(element => <Todotask key={element.id} id={element.id} task={element.title} isCompleted={element.completed} handleUpdate={handleUpdate} handleDelete={handleDelete}/>)
+                }
+            </div>}
+            <div className={searchDiv}>{
+                filteredTodos.map(element => <Todotask key={element.id} id={element.id} task={element.title} isCompleted={element.completed} handleUpdate={handleUpdate} handleDelete={handleDelete}/>)
+            }</div>
+            <button className={addicon} onClick={()=>add()}>{addicontext}</button>
         </div>
-        }
-        </>
+        <div className={screen}></div>
+        <div style={{
+                display: "flex",
+                opacity: profile?"1":"0",
+                flexDirection: "column",
+                alignItems: "center",
+                position: "absolute",
+                height: "100%",
+                width: "270px",
+                top: "0%",
+                right: "0%",
+                zIndex: profile?"6":"0",
+                overflow: "hidden",
+                backgroundColor: "black",
+                transition: "all 0.2s ease",
+                }
+        }>
+            <i onClick={()=>{setProfile(!profile);setUpdateTab(0);}} className="bi bi-arrow-right arrow-icon"></i>
+            {/* { <i className="bi bi-person-fill profile-main-icon"></i> } */}
+            <img onClick={handleImageUpdate} src={user.url} alt="not found" className="img"/>
+            <input type="file" id="fileInput" accept="image/*" style={{display:"none"}} onChange={handleFileChange} />
+            <h2 style={{color: "white",marginTop:"40px",fontWeight: "bold",display: updateTab?"none":"block"}}>{name} <i onClick={()=>setUpdateTab(!updateTab)} className="bi bi-pen fs-5 text-primary"></i></h2>
+            <div style={{display:updateTab?"flex":"none",
+                marginTop:"40px"
+            }}>
+                <input type="text" value={updateInput} onChange={(e) => setUpdateInputValue(e)} style={{border:"none",outline:"none"}}/>
+                <i onClick={()=>updateName()} className="bi bi-check fs-3 bg-light checkin"></i>
+            </div>
+            <h4 className="completed mt-2">Completed tasks: <span className="completed-count">{completed}</span></h4>
+            <h4 className="unCompleted">Uncompleted tasks: <span className="unCompleted-count">{totalCount-completed}</span></h4>
+            <button className="btn btn-primary rounded-pill py-2 px-5 mt-4" onClick={()=>gotoHome()}>logout</button>
+        </div>
+        </div>
 
-    )
+    );
 }
 
 export default Todo
