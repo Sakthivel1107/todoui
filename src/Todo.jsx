@@ -159,6 +159,8 @@ function Todo(){
     function add(){
         j.current = !j.current;
         i.current = 1;
+        if(profile)
+            setProfile(false);
         search();
         function scrollToTop() {
             window.scrollTo({top:0, behavior:"smooth"});
