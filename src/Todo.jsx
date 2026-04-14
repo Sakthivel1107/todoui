@@ -276,8 +276,7 @@ function Todo(){
         </div>
         <div className={screen}></div>
         <div style={{
-                display: "flex",
-                opacity: profile?"1":"0",
+                display: profile?"flex":"none",
                 flexDirection: "column",
                 alignItems: "center",
                 position: "absolute",
