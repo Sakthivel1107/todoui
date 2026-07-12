@@ -398,12 +398,12 @@ html, body, #root{
     cursor:  pointer;
 }
 .img{
-    margin-top: 0%;
-    border-radius: 100%;
-    width: 150px !important;
-    height: 150px !important;
-    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
     object-fit: cover;
+    object-position: center;
+    display: block;
 }
 .credPage{
     display: flex;
