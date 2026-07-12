@@ -400,8 +400,9 @@ html, body, #root{
 .img{
     margin-top: 0%;
     border-radius: 100%;
-    width: 150px;
-    height: 150px;
+    width: 150px !important;
+    height: 150px !important;
+    overflow: hidden;
     object-fit: contain;
 }
 .credPage{

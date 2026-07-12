@@ -214,10 +214,9 @@ function Todo(){
 
     const handleFileChange = async (e)=> {
         const file = e.target.files[0];
-        setUser(prev => ({...prev,url:loader}));
         if(!file)
             return;
-    
+        setUser(prev => ({...prev,url:loader}));
         const formData = new FormData();
         formData.append("file",file);
         async function update() {
