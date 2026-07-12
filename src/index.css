@@ -403,7 +403,7 @@ html, body, #root{
     width: 150px !important;
     height: 150px !important;
     overflow: hidden;
-    object-fit: contain;
+    object-fit: cover;
 }
 .credPage{
     display: flex;
